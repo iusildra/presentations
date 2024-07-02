@@ -1,0 +1,10 @@
+{
+  "extends": "./node_modules/@vue/tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "isolatedModules": true,
+    "verbatimModuleSyntax": true,
+    "strict": true,
+    "noImplicitThis": true,
+    "jsx": "preserve"
+  }
+}

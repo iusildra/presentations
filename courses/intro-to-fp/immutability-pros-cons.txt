@@ -1,0 +1,13 @@
+Pros:
+- Thread-safe by default (no locks needed)
+- Easier to reason about (no hidden state changes)
+- Enables structural sharing (efficient memory)
+- Makes testing trivial (same input = same output)
+- Enables safe parallelization
+- No defensive copying needed
+
+Cons:
+- Learning curve for developers used to mutation
+- Can require more memory without structural sharing
+- Some algorithms are naturally expressed with mutation
+- Performance overhead in naive implementations

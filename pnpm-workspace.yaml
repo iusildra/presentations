@@ -1,0 +1,7 @@
+# pnpm 11+ reads these from here; entries left in .npmrc are silently ignored
+shamefullyHoist: true
+autoInstallPeers: true
+
+# required by pnpm 9, which rejects a workspace file with no packages field
+packages:
+  - '.'

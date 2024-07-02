@@ -1,0 +1,5 @@
+overrides:
+  - files: ["slides.md", "talks/**/*.md", "courses/**/*.md"]
+    options:
+      parser: "slidev"
+      plugins: ["prettier-plugin-slidev"]

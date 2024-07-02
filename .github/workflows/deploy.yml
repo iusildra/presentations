@@ -1,0 +1,80 @@
+name: Deploy pages
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 'lts/*'
+      - uses: pnpm/action-setup@v6.1.1
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build
+        # Space-separated decks excluded from CI builds; remove one to publish it again
+        env:
+          SKIP_DECKS: courses/parser-combinators
+        run: |
+          find . -name "slides.md" | while read -r filepath; do
+            # Get the directory containing the slides.md
+            parent_dir=$(dirname "$filepath")
+
+            if [[ " $SKIP_DECKS " == *" ${parent_dir#./} "* ]]; then
+              echo "skipping $parent_dir"
+              continue
+            fi
+            
+            # Extract the parent folder name
+            parent_folder_name=$(basename "$parent_dir")
+
+            # Run the build command
+            pnpm run build --base /${{github.event.repository.name}}/${parent_dir#./} "$filepath"
+
+            # Determine the path to the generated dist folder
+            dist_folder="$parent_dir/dist"
+
+            # Create the corresponding directory structure in the static folder
+            # by replacing the first part (./) with ./static/
+            static_folder="./dist/${parent_dir#./}"
+            mkdir -p "$static_folder"
+
+            # Move the contents of the dist folder to the target static folder
+            mv "$dist_folder"/* "$static_folder"
+
+            # Remove the now empty dist folder
+            rmdir "$dist_folder"
+          done
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v6.0.0
+      - uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: dist
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5.0.1
