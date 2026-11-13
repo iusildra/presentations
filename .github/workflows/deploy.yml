@@ -29,7 +29,7 @@ jobs:
       - name: Build
         # Space-separated decks excluded from CI builds; remove one to publish it again
         env:
-          SKIP_DECKS: courses/parser-combinators
+          SKIP_DECKS:
         run: |
           find . -name "slides.md" | while read -r filepath; do
             # Get the directory containing the slides.md

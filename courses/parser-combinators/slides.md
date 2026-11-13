@@ -120,9 +120,9 @@ transition: fade
 </div>
 
 </template>
-<template #1>
+<template #1-5>
 
-```scala {1-3|5-8|9-11|13-16}
+```scala {1-3|5-8|9-11|13-16} {at:2}
 val tpeSep: Parser[String]  // ( : ) | (: ) | ( :)
 val alphas: Parser[Char]    // [a-zA-Z]
 val name: Parser[String]    = alphas.repeat.combineAll
@@ -187,22 +187,22 @@ transition: fade
 
 In Scala, an `object` defines a singleton class and is treated as a value.
 
-```scala {1-2|3-4}
+```scala {1-2|3-4} {at:1}
 object Foo:
   def bar: String = "bar"
 Foo.bar // "bar"
 val foo = Foo // Foo$@...
 ```
 
-<div v-click>
+<div v-click="2">
 
 With a class of **same name** in the **same file**, it becomes its companion object, and its methods/fields are static members of the class.
 
 </div>
 
-<div v-click>
+<div v-click="3">
 
-```scala {1-2|4-5|3}
+```scala {1-2|4-5|3} {at:4}
 class Foo:
   def bar: String = "bar"
   // static def baz = "baz"
@@ -487,7 +487,7 @@ It allows a more flexible design, but has some constraints for type-safety.
 
 ### Problem
 
-```scala {1-2|4|5|7}
+```scala {1-2|4|5|7} {at:1}
 sealed trait List[+A]:
   def ::(a: A): List[A] // prepend
 
@@ -499,11 +499,11 @@ Cat() :: list // type error!
 
 </div>
 
-<div v-click>
+<div v-click="4">
 
 ### Solution
 
-```scala {2|7}
+```scala {2|7} {at:5}
 sealed trait List[+A]:
   def ::[B >: A](b: B): List[B]
 
@@ -559,11 +559,11 @@ aCat.encode // "A cat"
 ```
 
 </template>
-<template #2>
+<template #2-6>
 
 ### Type class
 
-```scala {1,3|5-6|8-9|11-12}
+```scala {1,3|5-6|8-9|11-12} {at:3}
 trait Encoder[-A] { def encode(a: A): String }
 
 abstract class Animal
@@ -631,9 +631,9 @@ transition: fade
 ## Exercices solution
 
 <v-switch>
-<template #0>
+<template #0-3>
 
-```scala {1-3|5-10|12-14}
+```scala {1-3|5-10|12-14} {at:1}
 // 1. TC definition
 trait JsonEncoder[-T]:
   def encode(t: T): String
@@ -651,9 +651,9 @@ extension [T](t: T)(using encoder: JsonEncoder[T])
 ```
 
 </template>
-<template #1>
+<template #3-6>
 
-```scala {1-4|6-9|11-14}
+```scala {1-4|6-9|11-14} {at:4}
 // TC instance for List[T]
 given [T: JsonEncoder]: JsonEncoder[List[T]] with
   def encode(list: List[T]): String =
@@ -1271,11 +1271,11 @@ Parser.alphas
 
 </div>
 
-<div v-click>
+<div v-click="1">
 
 ### Comparison
 
-```scala {3-6|8-9}
+```scala {3-6|8-9} {at:2}
 val randomString = ???
 
 parseWith(randomString): c =>
